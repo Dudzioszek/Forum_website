@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ topic.title }}</h1>
+
+<!-- Add a form to create a claim -->
+<form action="{{ url_for('add_claim', topic_id=topic.id) }}" method="POST">
+    <input type="text" name="header" placeholder="Add a claim">
+    <button type="submit">Add Claim</button>
+</form>
+
+{% for claim in claims %}
+<div class="claim">
+    <h2>{{ claim.header }}</h2>
+    <p>By {{ claim.username }} at {{ claim.formatted_timestamp }}</p>
+
+    <form class="reply-form">
+        <input type="hidden" name="claim_id" value="{{ claim.id }}">
+        <input type="text" name="content" placeholder="Add a reply">
+        <button type="submit">Add Reply</button>
+    </form>
+    <h3>Replies:</h3>
+    <div class="replies">
+        {% for reply in replies[claim.id] %}
+        <p>
+            {{ reply.content }} - {{ reply.username }} at {{ reply.formatted_timestamp }}
+        </p>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+
+<script>
+document.querySelectorAll('.reply-form').forEach(function (form) {
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const claimId = e.target.elements['claim_id'].value;
+        const content = e.target.elements['content'].value;
+
+        fetch(`/api/topic/{{ topic.id }}/claim/${claimId}/add_reply`, {
+            method: 'POST',
+            body: new FormData(e.target),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            credentials: 'same-origin'
+        }).then(function (response) {
+            if (response.ok) {
+                location.reload();
+            } else {
+                console.error('Failed to submit the reply.');
+            }
+        }).catch(function (error) {
+            console.error('Error during the AJAX request:', error);
+        });
+    });
+});
+</script>
+{% endblock %}

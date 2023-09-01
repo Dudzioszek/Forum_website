@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Welcome to the Debate Forum</h1>
+  <!-- Add your site banner and user interface elements here -->
+
+  <h2>Topics</h2>
+  {% if 'user_id' in session %}
+    <ul>
+      {% for topic in topics %}
+        <li><a href="{{ url_for('topic', topic_id=topic['id']) }}">{{ topic['title'] }}</a></li>
+      {% endfor %}
+    </ul>
+    <p><a href="{{ url_for('create_topic') }}">Create a new topic</a></p>
+  {% else %}
+    <p>You must <a href="{{ url_for('login') }}">log in</a> or <a href="{{ url_for('register') }}">register</a> to view and enter topics.</p>
+  {% endif %}
+{% endblock %}

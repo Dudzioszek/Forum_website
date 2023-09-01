@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <title>{{ claim.header }}</title>
+</head>
+<body>
+    <h1>{{ claim.header }}</h1>
+    <!-- Add claim-related UI elements here -->
+
+    <h2>Replies</h2>
+    <!-- Display replies and their relationship types here -->
+
+    {% if 'username' in session %}
+        <p><a href="{{ url_for('create_reply', claim_id=claim['id']) }}">Create a new reply</a></p>
+    {% endif %}
+    <p><a href="{{ url_for('topic', topic_id=claim['topic_id']) }}">Back to topic</a></p>
+</body>
+</html>

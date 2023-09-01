@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    /* Styles to float the Home link to the left and the other links to the right */
+    .nav-left {
+        float: left;
+    }
+    .nav-right {
+        float: right;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <!-- Home button floated to the left -->
+    <div class="nav-left">
+      <a href="{{ url_for('index') }}">Home</a>
+    </div>
+
+    <!-- Navigation links floated to the right -->
+    <div class="nav-right">
+      {% if 'user_id' in session %}
+        <a href="{{ url_for('logout') }}">Logout</a>
+      {% else %}
+        <a href="{{ url_for('register') }}">Register</a>
+        <a href="{{ url_for('login') }}">Login</a>
+      {% endif %}
+    </div>
+    <div style="clear:both;"></div> <!-- Clear the float to ensure proper layout -->
+  </nav>
+
+  {% for message in get_flashed_messages(with_categories=true) %}
+    <div class="alert alert-{{ message[0] }}">
+      {{ message[1] }}
+    </div>
+  {% endfor %}
+
+  {% block content %}{% endblock %}
+  
+</body>
+</html>
